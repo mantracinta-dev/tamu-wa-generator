@@ -1,97 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Generator Undangan WA</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generator Undangan WA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gray-100 min-h-screen flex justify-center justify-items-start p-4"
+  >
+    <div class="bg-white w-full max-w-xl rounded-2xl shadow-lg p-6">
+      <h1 class="text-xl font-bold mb-4 text-gray-800">
+        Undangan WA Generator
+      </h1>
 
-  <div class="bg-white w-full max-w-xl rounded-2xl shadow-lg p-6">
-    <h1 class="text-xl font-bold mb-4 text-gray-800">Undangan WA Generator</h1>
+      <!-- INPUT -->
+      <input
+        id="nameInput"
+        type="text"
+        placeholder="Masukkan nama tamu"
+        class="w-full border rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
 
-    <!-- INPUT -->
-    <input
-      id="nameInput"
-      type="text"
-      placeholder="Masukkan nama tamu"
-      class="w-full border rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-
-    <!-- BUTTON -->
-    <button
-      id="generateBtn"
-      disabled
-      class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold disabled:bg-gray-300"
-    >
-      Generate Preview
-    </button>
-
-    <!-- PREVIEW -->
-    <div id="previewContainer" class="mt-6 hidden">
-      <h2 class="font-semibold mb-2 text-gray-700">Preview:</h2>
-      <pre id="previewText" class="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap"></pre>
-
-      <!-- ACTION -->
+      <!-- BUTTON -->
       <button
-        id="copyBtn"
-        class="mt-4 w-full bg-green-500 text-white p-3 rounded-lg font-semibold"
+        id="generateBtn"
+        disabled
+        class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold disabled:bg-gray-300"
       >
-        Copy ke Clipboard
+        Generate Preview
       </button>
 
-      <p id="successMsg" class="text-green-600 text-sm mt-2 hidden">
-        ✅ Teks berhasil disalin!
-      </p>
+      <!-- PREVIEW -->
+      <div id="previewContainer" class="mt-6 hidden">
+        <h2 class="font-semibold mb-2 text-gray-700">Preview:</h2>
+        <pre
+          id="previewText"
+          class="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap"
+        ></pre>
+
+        <!-- ACTION -->
+        <button
+          id="copyBtn"
+          class="mt-4 w-full bg-green-500 text-white p-3 rounded-lg font-semibold"
+        >
+          Copy ke Clipboard
+        </button>
+
+        <p id="successMsg" class="text-green-600 text-sm mt-2 hidden">
+          ✅ Teks berhasil disalin!
+        </p>
+      </div>
     </div>
-  </div>
 
-  <script>
-    const input = document.getElementById('nameInput');
-    const generateBtn = document.getElementById('generateBtn');
-    const previewContainer = document.getElementById('previewContainer');
-    const previewText = document.getElementById('previewText');
-    const copyBtn = document.getElementById('copyBtn');
-    const successMsg = document.getElementById('successMsg');
+    <script>
+      const input = document.getElementById("nameInput");
+      const generateBtn = document.getElementById("generateBtn");
+      const previewContainer = document.getElementById("previewContainer");
+      const previewText = document.getElementById("previewText");
+      const copyBtn = document.getElementById("copyBtn");
+      const successMsg = document.getElementById("successMsg");
 
-    // Enable button kalau ada isi
-    input.addEventListener('input', () => {
-      generateBtn.disabled = input.value.trim() === '';
-    });
+      // Enable button kalau ada isi
+      input.addEventListener("input", () => {
+        const isEmpty = input.value.trim() === "";
 
-    // Format nama (rapihin + capitalize + tetap jaga gelar)
-    function formatName(name) {
-      return name
-        .trim()
-        .replace(/\s+/g, ' ')
-        .toLowerCase()
-        .split(' ')
-        .map(word => {
-          if (word.includes('.')) {
-            return word.toUpperCase(); // contoh: s.kom → S.KOM
-          }
-          return word.charAt(0).toUpperCase() + word.slice(1);
-        })
-        .join(' ');
-    }
+        // Enable/disable button
+        generateBtn.disabled = isEmpty;
 
-    // Slug aman (hapus simbol, pakai dash)
-    function slugify(name) {
-      return name
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9\s]/g, '') // hapus simbol
-        .replace(/\s+/g, '-'); // spasi jadi dash
-    }
+        // Kalau input kosong → reset preview
+        if (isEmpty) {
+          previewContainer.classList.add("hidden");
+          previewText.textContent = "";
+          successMsg.classList.add("hidden");
+        }
+      });
 
-    // Template
-    function generateTemplate(name, slug) {
-      return `Kepada Yth.
+      // Format nama (rapihin + capitalize + tetap jaga gelar)
+      function formatName(name) {
+        return name
+          .trim()
+          .replace(/\s+/g, " ")
+          .toLowerCase()
+          .split(" ")
+          .map((word) => {
+            if (word.includes(".")) {
+              return word.toUpperCase(); // contoh: s.kom → S.KOM
+            }
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          })
+          .join(" ");
+      }
+
+      // Slug aman (hapus simbol, pakai dash)
+      function slugify(name) {
+        return name
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s]/g, "") // hapus simbol
+          .replace(/\s+/g, "-"); // spasi jadi dash
+      }
+
+      // Template
+      function generateTemplate(name, slug) {
+        return `Kepada Yth.
 Bapak/Ibu/Saudara/i
 di Tempat
 
-${name}
+*${name}*
 
 Assalamualaikum Warahmatullahi Wabarakatuh,
 
@@ -108,43 +124,42 @@ Wassalamualaikum Warahmatullahi Wabarakatuh.
 Terima kasih.
 
 Hormat kami,
-Siska & Setio`;
-    }
-
-    // Generate Preview
-    generateBtn.addEventListener('click', () => {
-      const rawName = input.value;
-
-      const formattedName = formatName(rawName);
-      const slug = slugify(rawName);
-
-      const result = generateTemplate(formattedName, slug);
-
-      previewText.textContent = result;
-      previewContainer.classList.remove('hidden');
-
-      successMsg.classList.add('hidden');
-
-      // auto scroll
-      previewContainer.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // Copy
-    copyBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(previewText.textContent);
-
-        successMsg.classList.remove('hidden');
-
-        copyBtn.textContent = "Copied ✅";
-        setTimeout(() => {
-          copyBtn.textContent = "Copy ke Clipboard";
-        }, 2000);
-      } catch (err) {
-        alert('Gagal copy teks');
+*Siska & Setio*`;
       }
-    });
-  </script>
 
-</body>
+      // Generate Preview
+      generateBtn.addEventListener("click", () => {
+        const rawName = input.value;
+
+        const formattedName = formatName(rawName);
+        const slug = slugify(rawName);
+
+        const result = generateTemplate(formattedName, slug);
+
+        previewText.textContent = result;
+        previewContainer.classList.remove("hidden");
+
+        successMsg.classList.add("hidden");
+
+        // auto scroll
+        previewContainer.scrollIntoView({ behavior: "smooth" });
+      });
+
+      // Copy
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(previewText.textContent);
+
+          successMsg.classList.remove("hidden");
+
+          copyBtn.textContent = "Copied ✅";
+          setTimeout(() => {
+            copyBtn.textContent = "Copy ke Clipboard";
+          }, 2000);
+        } catch (err) {
+          alert("Gagal copy teks");
+        }
+      });
+    </script>
+  </body>
 </html>
